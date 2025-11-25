@@ -33,8 +33,8 @@ def calculate_last_alphanum(str):
     max_index = -1
     for key in nums:
             try:
-                if (str.index(nums[key]) > max_index):
-                    max_index = str.index(nums[key])
+                if (str.rindex(nums[key]) > max_index):
+                    max_index = str.rindex(nums[key])
                     return_tuple[1] = key
             except ValueError: 
                 print(end='')   
@@ -43,25 +43,34 @@ def calculate_last_alphanum(str):
 
 with open("list.txt", "r") as file:
     for str in file:
-        for c in range(len(str)):
+        str_tuple_tens = calculate_first_alphanum(str)
+        str_tuple_ones = calculate_last_alphanum(str)
+        tenths_place_num = 900000
+        for c in range(len(str)):        
             char = str[c]
             if (char.isnumeric()):
-                str_tuple = calculate_first_alphanum(str)
-                if (str_tuple[0] < c):
-                    tenths_place = int(str_tuple[1])
-                else:
-                    tenths_place = int(char)
+                tenths_place_num = c
                 break
-        for c in range(len(str)):
+        
+        if (tenths_place_num == -1 or str_tuple_tens[0] < c):
+            tenths_place = int(str_tuple_tens[1])
+        else:
+            tenths_place = int(char)
+
+        ones_place_num = -1
+        for c in range(len(str)):  
             char = str[len(str) - (c + 1)]
-            if (char.isnumeric()):
-                str_tuple = calculate_last_alphanum(str)
-                if (str_tuple[0] > 0):
-                    ones_place = int(str_tuple[1])
-                else:
-                    ones_place = int(char)
+            if (char.isnumeric()):         
+                ones_place_num = len(str) - (c + 1)
                 break
+
+        if (ones_place_num == -1 or str_tuple_ones[0] > ones_place_num):
+            ones_place = int(str_tuple_ones[1])
+        else:
+            ones_place = int(char)
+
         print(int(tenths_place * 10 + ones_place))
+        print(str)
         sum += int(tenths_place * 10 + ones_place)
 
 print(sum)
